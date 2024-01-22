@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/font/fontawesome-webfont.ttf</file>
+        <file>res/qss/main.css</file>
+        <file>res/img/device_online.png</file>
+        <file>res/img/device_offline.png</file>
+        <file>res/img/play-circle.png</file>
+        <file>res/img/android.png</file>
+        <file>res/img/down.png</file>
+        <file>res/img/arrow-down.png</file>
+        <file>res/img/alert.png</file>
+        <file>res/img/menu.png</file>
+        <file>res/img/icon.png</file>
+        <file>res/img/logo.png</file>
+        <file>res/img/logo.ico</file>
+        <file>res/img/vphone.png</file>
+        <file>res/img/no_device.png</file>
+        <file>res/img/wx.png</file>
+    </qresource>
+</RCC>
