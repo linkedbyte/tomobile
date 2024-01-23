@@ -21,4 +21,4 @@
 - 同步设备声音到电脑
 
 屏幕截图:
-!(https://raw.githubusercontent.com/linkedbyte/tomobile/main/screenshot/WechatIMG312.jpg)
+![''](https://raw.githubusercontent.com/linkedbyte/tomobile/main/screenshot/WechatIMG312.jpg)
