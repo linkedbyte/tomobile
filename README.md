@@ -20,4 +20,5 @@
 - Ctrl + v 将计算机剪贴板作为一系列文本事件发送到设备
 - 同步设备声音到电脑
 
-  
+屏幕截图:
+!(https://raw.githubusercontent.com/linkedbyte/tomobile/main/screenshot/WechatIMG312.jpg)
