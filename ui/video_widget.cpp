@@ -174,26 +174,26 @@ void VideoWidget::initShader()
                              precision mediump float;
                              )");
     }
-    m_shaderProgram.addShaderFromSourceCode(QOpenGLShader::Vertex, vertShader);
-    m_shaderProgram.addShaderFromSourceCode(QOpenGLShader::Fragment, fragShader);
-    m_shaderProgram.link();
-    m_shaderProgram.bind();
+    shaderProgram.addShaderFromSourceCode(QOpenGLShader::Vertex, vertShader);
+    shaderProgram.addShaderFromSourceCode(QOpenGLShader::Fragment, fragShader);
+    shaderProgram.link();
+    shaderProgram.bind();
 
     // 指定顶点坐标在vbo中的访问方式
     // 参数解释：顶点坐标在shader中的参数名称，顶点坐标为float，起始偏移为0，顶点坐标类型为vec3，步幅为3个float
-    m_shaderProgram.setAttributeBuffer("vertexIn", GL_FLOAT, 0, 3, 3 * sizeof(float));
+    shaderProgram.setAttributeBuffer("vertexIn", GL_FLOAT, 0, 3, 3 * sizeof(float));
     // 启用顶点属性
-    m_shaderProgram.enableAttributeArray("vertexIn");
+    shaderProgram.enableAttributeArray("vertexIn");
 
     // 指定纹理坐标在vbo中的访问方式
     // 参数解释：纹理坐标在shader中的参数名称，纹理坐标为float，起始偏移为12个float（跳过前面存储的12个顶点坐标），纹理坐标类型为vec2，步幅为2个float
-    m_shaderProgram.setAttributeBuffer("textureIn", GL_FLOAT, 12 * sizeof(float), 2, 2 * sizeof(float));
-    m_shaderProgram.enableAttributeArray("textureIn");
+    shaderProgram.setAttributeBuffer("textureIn", GL_FLOAT, 12 * sizeof(float), 2, 2 * sizeof(float));
+    shaderProgram.enableAttributeArray("textureIn");
 
     // 关联片段着色器中的纹理单元和opengl中的纹理单元（opengl一般提供16个纹理单元）
-    m_shaderProgram.setUniformValue("textureY", 0);
-    m_shaderProgram.setUniformValue("textureU", 1);
-    m_shaderProgram.setUniformValue("textureV", 2);
+    shaderProgram.setUniformValue("textureY", 0);
+    shaderProgram.setUniformValue("textureU", 1);
+    shaderProgram.setUniformValue("textureV", 2);
 }
 
 void VideoWidget::initTextures()

@@ -37,6 +37,7 @@ VideoForm::VideoForm(QWidget *parent) :
     videoWidget->setObjectName("VideoForm");
     hasframe = false;
     controller = NULL;
+    lastFrame = NULL;
 
     setMouseTracking(true);
     this->setAcceptDrops(true);
@@ -59,6 +60,9 @@ VideoForm::VideoForm(QWidget *parent) :
             break;
         case VideoTitleBarAction::MAX:
             this->showMaximized();
+            break;
+        case VideoTitleBarAction::FULLSCREEN:
+            this->switchFullScreen();
             break;
         default:
             break;
@@ -115,14 +119,18 @@ void VideoForm::setTitle(const std::string &title)
 {
     this->titleBar->setDeviceName(title);
 }
-
+void VideoForm::setVisible(bool visible)
+{
+    QWidget::setVisible(visible);
+}
 void VideoForm::updateFrame()
 {
     AVFrame *frame = av_frame_alloc();
     this->frameBuffer->consume(frame);
     QSize newSize(frame->width,frame->height);
     updateShowSize(newSize);
-    videoWidget->updateTextures(frame->data[0],frame->data[1],frame->data[2],frame->linesize[0],frame->linesize[1],frame->linesize[2]);
+    videoWidget->updateTextures(frame->data[0],frame->data[1],frame->data[2],
+                                frame->linesize[0],frame->linesize[1],frame->linesize[2]);
     av_frame_free(&frame);
 }
 
@@ -253,6 +261,8 @@ void VideoForm::mousePressEvent(QMouseEvent *event)
         }
         else
         {
+            QPoint pos = videoWidget->mapFromParent(event->pos());
+            event->setLocalPos(pos);
             controller->mouseEvent(event,videoWidget->getFrameSize(),videoWidget->size());
         }
     }
@@ -265,13 +275,15 @@ void VideoForm::mousePressEvent(QMouseEvent *event)
         }
     }
 }
+
 void VideoForm::switchFullScreen()
 {
     if(isFullScreen())
     {
         showNormal();
-        int w,h,x,y;
         QSize size = this->size();
+        this->titleBar->setVisible(true);
+        this->bottomBar->setVisible(true);
         this->resize(size.width(),size.height());
     }
     else
@@ -279,6 +291,8 @@ void VideoForm::switchFullScreen()
         QScreen *screen = QGuiApplication::primaryScreen();
         QSize screenSize = screen->size();
         showFullScreen();
+        this->titleBar->setVisible(false);
+        this->bottomBar->setVisible(false);
         int w,h,x,y;
         float whratio = 1.0f * frameSize.width()/frameSize.height();
         if(whratio<1.0f)//垂直
@@ -312,9 +326,42 @@ void VideoForm::resize(int w, int h)
 
 void VideoForm::showMaximized()
 {
-    QScreen *screen = QGuiApplication::primaryScreen();
-    QSize screenSize = screen->availableGeometry().size();
-    int i = 0;
+    if(isMaximized())
+    {
+        showNormal();
+        QSize size = this->size();
+        this->resize(size.width(),size.height());
+    }
+    else
+    {
+        QWidget::showMaximized();
+        QSize screenSize = this->size();
+        int w,h,x,y;
+        float whRatio = 1.0f * frameSize.width()/frameSize.height();
+        if(whRatio<1.0f)//垂直
+        {
+            h = screenSize.height()-TITLE_BAR_HEIGHT-BOTTOM_BAR_HEIGHT;
+            w = h*whRatio;
+            x = (screenSize.width()-w)/2;
+
+            this->titleBar->setGeometry(x,0,w,TITLE_BAR_HEIGHT);
+            this->videoWidget->resize(w,h);
+            this->videoWidget->move(x,TITLE_BAR_HEIGHT);
+            y = videoWidget->y()+videoWidget->height();
+
+            this->bottomBar->setGeometry(x,y,w,BOTTOM_BAR_HEIGHT);
+        }
+        else
+        {
+            w = screenSize.width();
+            h = screenSize.width()*whRatio;
+            y = (screenSize.height()-h)/2;
+            x = 0;
+            this->videoWidget->resize(w,h);
+            this->videoWidget->move(x,y);
+        }
+    }
+
 }
 void VideoForm::initShortcut()
 {

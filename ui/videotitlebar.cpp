@@ -14,12 +14,14 @@ VideoTitleBar::VideoTitleBar(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->ui->masterBtn->setFixedSize(BUTTON_WIDTH,BUTTON_HEIGHT);
+    isMax = true;
+
+    /*this->ui->masterBtn->setFixedSize(BUTTON_WIDTH,BUTTON_HEIGHT);
     IconFont::instance()->setFont(this->ui->masterBtn,QChar(0xf500),ICON_SIZE);
     this->ui->masterBtn->setToolTip("群主");
     connect(this->ui->masterBtn,&QPushButton::clicked,this,[=](bool checked){
         emit barAction(VideoTitleBarAction::MASTER);
-    });
+    });*/
 
     this->ui->recoderBtn->setFixedSize(BUTTON_WIDTH,BUTTON_HEIGHT);
     IconFont::instance()->setFont(this->ui->recoderBtn,QChar(0xf8d9),ICON_SIZE);
@@ -76,7 +78,8 @@ VideoTitleBar::VideoTitleBar(QWidget *parent) :
     connect(this->ui->closeBtn,&QPushButton::clicked,this,[=](bool checked){
         emit barAction(VideoTitleBarAction::CLOSE);
     });
-    this->setStyleSheet("QPushButton:hover{color:#ffffff;}");
+    this->setStyleSheet(tr("QPushButton:hover{color:#ffffff;}"
+                           "QToolTip{color:#ffffff;}"));
     this->ui->deviceNameLabel->setStyleSheet("color:#ffffff;");
 }
 
@@ -90,9 +93,10 @@ void VideoTitleBar::resizeEvent(QResizeEvent *event)
     int x = this->ui->deviceNameLabel->width();
     int y = TOP_PADDING;
 
-    x+=SPACE;
+    /*x+=SPACE;
     this->ui->masterBtn->move(x,y);
-    x+=BUTTON_WIDTH;
+    x+=BUTTON_WIDTH;*/
+
     x+=SPACE;
     this->ui->recoderBtn->move(x,y);
     x+=BUTTON_WIDTH;
@@ -138,4 +142,9 @@ void VideoTitleBar::setDeviceName(const std::string &name)
 {
     this->deviceName = name;
     this->ui->deviceNameLabel->setText(this->deviceName.c_str());
+}
+
+void VideoTitleBar::buttonActionIcon(VideoTitleBarAction action)
+{
+
 }

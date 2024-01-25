@@ -37,7 +37,7 @@ private:
     bool needUpdate;
     bool textureInited;
     QOpenGLBuffer vOpenGLBuffer;
-    QOpenGLShaderProgram m_shaderProgram;
+    QOpenGLShaderProgram shaderProgram;
     GLuint texture[3] = { 0 };
 };
 

@@ -17,12 +17,6 @@ extern "C"
 namespace Ui {
 class VideoForm;
 }
-enum TOOLS_SIDE
-{
-    LEFT = 0,
-    RIGHT,
-};
-
 class VideoForm : public QWidget
 {
     Q_OBJECT
@@ -33,6 +27,7 @@ public:
     void updateFrame();
     void setController(ControllerThread *handle);
     void setFrameBuffer(FrameBuffer *fb);
+    void setVisible(bool visible) override;
 private:
     void updateRender(int width, int height, uint8_t *data_y, uint8_t *data_u, uint8_t *data_v, int linesize_y, int linesize_u, int linesize_v);
     void updateShowSize(const QSize &newSize);
@@ -76,6 +71,7 @@ private:
     VideoTitleBar *titleBar;
     VideoBottomBar *bottomBar;
     FrameBuffer *frameBuffer;
+    AVFrame *lastFrame;
 
 signals:
     void signal_close();

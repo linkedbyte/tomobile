@@ -31,6 +31,7 @@ public:
     virtual void resizeEvent(QResizeEvent *event);
     void setController(ControllerThread *handle);
     void setDeviceName(const std::string &name);
+    void buttonActionIcon(VideoTitleBarAction action);
 signals:
     void barAction(VideoTitleBarAction action);
 
@@ -38,6 +39,7 @@ private:
     Ui::VideoTitleBar *ui;
     std::string deviceName;
     ControllerThread *controller;
+    bool isMax;
 
 };
 
