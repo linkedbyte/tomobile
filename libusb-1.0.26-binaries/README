@@ -1,0 +1,8 @@
+libusb 1.0.26 binaries
+
+macOS:
+Both macos_10.7 and macos_11.6 folders are built on macOS 11.6.1 but the
+former with MACOSX_DEPLOYMENT_TARGET=10.7
+
+Windows:
+Build for 32-bit or 64-bit by Microsoft VS2015, MingW and Cygwin
