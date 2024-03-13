@@ -59,7 +59,30 @@ bool AdbProcess::startServer()
     args << "start-server";
     return execute(args);
 }
+bool AdbProcess::install(const std::string &serial, const std::string &apkPath)
+{
+    if(serial.empty())
+        return false;
+    QStringList args;
+    args<<"-s";
+    args<<serial.c_str();
+    args<<"install";
+    args<<apkPath.c_str();
+    return execute(args);
+}
 
+bool AdbProcess::pushFile(const std::string &serial, const std::string &filePath,const std::string &devicePath)
+{
+    if(serial.empty())
+        return false;
+    QStringList args;
+    args<<"-s";
+    args<<serial.c_str();
+    args<<"push";
+    args<<filePath.c_str();
+    args<<devicePath.c_str();
+    return execute(args);
+}
 bool AdbProcess::push(const std::string &serial)
 {
     if(serial.empty())
