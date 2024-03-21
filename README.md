@@ -2,6 +2,9 @@
 
 ![''](https://github.com/linkedbyte/tomobile/blob/main/screenshot/tomobile.gif)
 
+群控版本：
+![''](https://github.com/linkedbyte/tomobile/blob/main/screenshot/output.gif）
+
 基本功能：
 - 实时显示 Android 设备屏幕
 - 实时键鼠控制Android设备
