@@ -1,6 +1,6 @@
 # ToMobile是一款Android投屏、反控工具
 
-部分功能参考了scrcpy。
+![''](https://github.com/linkedbyte/tomobile/blob/main/screenshot/tomobile.gif)
 
 基本功能：
 - 实时显示 Android 设备屏幕
@@ -25,5 +25,4 @@
 ![''](https://raw.githubusercontent.com/linkedbyte/tomobile/main/screenshot/WechatIMG312.jpg)
 ![''](https://raw.githubusercontent.com/linkedbyte/tomobile/main/screenshot/WechatIMG313.jpg)
 ![''](https://raw.githubusercontent.com/linkedbyte/tomobile/main/screenshot/WechatIMG314.jpg)
-![''](https://raw.githubusercontent.com/linkedbyte/tomobile/main/screenshot/WechatIMG315.jpg)
-![''](https://raw.githubusercontent.com/linkedbyte/tomobile/main/screenshot/WechatIMG316.jpg)
+
