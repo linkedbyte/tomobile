@@ -42,19 +42,19 @@ enum CopyKey {
     COPY_KEY_COPY,
     COPY_KEY_CUT,
 };
-struct MdcSize {
+struct TMSize {
     uint16_t width;
     uint16_t height;
 };
 
-struct MdcPoint {
+struct TMPoint {
     int32_t x;
     int32_t y;
 };
 
-struct MdcPosition {
-    struct MdcSize screen_size;
-    struct MdcPoint point;
+struct TMPosition {
+    struct TMSize screenSize;
+    struct TMPoint point;
 };
 struct ControlMsg {
     enum ControlMsgType type;
@@ -64,39 +64,39 @@ struct ControlMsg {
             enum android_keycode keycode;
             uint32_t repeat;
             enum android_metastate metastate;
-        } inject_keycode;
+        } injectKeycode;
         struct {
             char *text; // owned, to be freed by free()
-        } inject_text;
+        } injectText;
         struct {
             enum android_motionevent_action action;
-            enum android_motionevent_buttons action_button;
+            enum android_motionevent_buttons actionButton;
             enum android_motionevent_buttons buttons;
-            uint64_t pointer_id;
-            struct MdcPosition position;
+            uint64_t pointerId;
+            struct TMPosition position;
             float pressure;
-        } inject_touch_event;
+        } injectTouchEvent;
         struct {
-            struct MdcPosition position;
+            struct TMPosition position;
             float hscroll;
             float vscroll;
             enum android_motionevent_buttons buttons;
-        } inject_scroll_event;
+        } injectScrollEvent;
         struct {
             enum android_keyevent_action action; // action for the BACK key
             // screen may only be turned on on ACTION_DOWN
-        } back_or_screen_on;
+        } backOrScreenOn;
         struct {
             enum CopyKey ckey;
-        } get_clipboard;
+        } getClipboard;
         struct {
             uint64_t sequence;
             char *text; // owned, to be freed by free()
             bool paste;
-        } set_clipboard;
+        } setClipboard;
         struct {
             enum ScreenPowerMode mode;
-        } set_screen_power_mode;
+        } setScreenPowerMode;
     };
     static ssize_t serialize(const struct ControlMsg *msg, unsigned char *buf);
 
@@ -119,7 +119,7 @@ struct DeviceMsg {
         } clipboard;
         struct {
             uint64_t sequence;
-        } ack_clipboard;
+        } ackClipboard;
     };
     static int deserialize(const unsigned char *buf, size_t len,struct DeviceMsg *msg);
 

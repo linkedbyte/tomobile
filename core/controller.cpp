@@ -45,14 +45,14 @@ void ControllerThread::run()
         ControlMsg msg = queue.front();
         queue.pop();
         mutex.unlock();
-        unsigned char serialized_msg[CONTROL_MSG_MAX_SIZE];
-        size_t length = ControlMsg::serialize(&msg, serialized_msg);
+        unsigned char serializedMsg[CONTROL_MSG_MAX_SIZE];
+        size_t length = ControlMsg::serialize(&msg, serializedMsg);
         if(!length)
         {
             qDebug()<<"serialize msg failed!";
             continue;
         }
-        size_t w = this->socket->write((char*)serialized_msg,length);
+        size_t w = this->socket->write((char*)serializedMsg,length);
         this->socket->flush();
         if(w != length)
         {
@@ -111,7 +111,7 @@ void ControllerThread::pressBackOrTurnScreenOn()
 {
     struct ControlMsg msg;
     msg.type = CONTROL_MSG_TYPE_BACK_OR_SCREEN_ON;
-    msg.back_or_screen_on.action = AKEY_EVENT_ACTION_DOWN;
+    msg.backOrScreenOn.action = AKEY_EVENT_ACTION_DOWN;
 
     if(!pushMsg(&msg)) {
         qDebug("Could not request 'press back or turn screen on'");
@@ -121,7 +121,7 @@ void ControllerThread::setScreenPowerMode(bool state)
 {
     struct ControlMsg msg;
     msg.type = CONTROL_MSG_TYPE_SET_SCREEN_POWER_MODE;
-    msg.set_screen_power_mode.mode = state ? SCREEN_POWER_MODE_NORMAL:SCREEN_POWER_MODE_OFF;
+    msg.setScreenPowerMode.mode = state ? SCREEN_POWER_MODE_NORMAL:SCREEN_POWER_MODE_OFF;
 
     if (!pushMsg(&msg)) {
         qDebug("Could not request 'set screen power mode'");
@@ -147,7 +147,7 @@ void ControllerThread::rotateDevice() {
 bool ControllerThread::getDeviceClipboard(CopyKey flag) {
     struct ControlMsg msg;
     msg.type = CONTROL_MSG_TYPE_GET_CLIPBOARD;
-    msg.get_clipboard.ckey = flag;
+    msg.getClipboard.ckey = flag;
 
     if (!pushMsg(&msg)) {
         qDebug("Could not request 'get device clipboard'");
@@ -166,9 +166,9 @@ bool ControllerThread::setDeviceClipboard(const char *text)
     }
     struct ControlMsg msg;
     msg.type = CONTROL_MSG_TYPE_SET_CLIPBOARD;
-    msg.set_clipboard.sequence = sequence;
-    msg.set_clipboard.text = text_dup;
-    msg.set_clipboard.paste = true;
+    msg.setClipboard.sequence = sequence;
+    msg.setClipboard.text = text_dup;
+    msg.setClipboard.paste = true;
 
     if (!pushMsg(&msg)) {
         free(text_dup);
@@ -232,15 +232,15 @@ void ControllerThread::mouseEvent(const QMouseEvent *event, const QSize &frameSi
     // set data
     struct ControlMsg msg;
     msg.type = CONTROL_MSG_TYPE_INJECT_TOUCH_EVENT;
-    msg.inject_touch_event.action = action;
-    msg.inject_touch_event.pointer_id = POINTER_ID_GENERIC_FINGER;
-    msg.inject_touch_event.position.screen_size.width = (uint16_t)frameSize.width();
-    msg.inject_touch_event.position.screen_size.height = (uint16_t)frameSize.height();
-    msg.inject_touch_event.position.point.x = pos.x();
-    msg.inject_touch_event.position.point.y = pos.y();
-    msg.inject_touch_event.pressure = action == AMOTION_EVENT_ACTION_DOWN?1.f:0.f;
-    msg.inject_touch_event.action_button = convert_mouse_buttons(event->button());
-    msg.inject_touch_event.buttons = convert_mouse_buttons(event->buttons());
+    msg.injectTouchEvent.action = action;
+    msg.injectTouchEvent.pointerId = POINTER_ID_GENERIC_FINGER;
+    msg.injectTouchEvent.position.screenSize.width = (uint16_t)frameSize.width();
+    msg.injectTouchEvent.position.screenSize.height = (uint16_t)frameSize.height();
+    msg.injectTouchEvent.position.point.x = pos.x();
+    msg.injectTouchEvent.position.point.y = pos.y();
+    msg.injectTouchEvent.pressure = action == AMOTION_EVENT_ACTION_DOWN?1.f:0.f;
+    msg.injectTouchEvent.actionButton = convert_mouse_buttons(event->button());
+    msg.injectTouchEvent.buttons = convert_mouse_buttons(event->buttons());
 
     if (!pushMsg(&msg)) {
         qDebug("Could not request 'inject mouse click event'");
@@ -260,15 +260,15 @@ void ControllerThread::mouseMoveEvent(const QMouseEvent *event, const QSize &fra
     // set data
     struct ControlMsg msg;
     msg.type = CONTROL_MSG_TYPE_INJECT_TOUCH_EVENT;
-    msg.inject_touch_event.action = action;
-    msg.inject_touch_event.pointer_id = POINTER_ID_GENERIC_FINGER;
-    msg.inject_touch_event.position.screen_size.width = (uint16_t)frameSize.width();
-    msg.inject_touch_event.position.screen_size.height = (uint16_t)frameSize.height();
-    msg.inject_touch_event.position.point.x = pos.x();
-    msg.inject_touch_event.position.point.y = pos.y();
-    msg.inject_touch_event.pressure = 1.f;
-    msg.inject_touch_event.buttons = convert_mouse_buttons(event->buttons());
-    msg.inject_touch_event.action_button = (enum android_motionevent_buttons)0;
+    msg.injectTouchEvent.action = action;
+    msg.injectTouchEvent.pointerId = POINTER_ID_GENERIC_FINGER;
+    msg.injectTouchEvent.position.screenSize.width = (uint16_t)frameSize.width();
+    msg.injectTouchEvent.position.screenSize.height = (uint16_t)frameSize.height();
+    msg.injectTouchEvent.position.point.x = pos.x();
+    msg.injectTouchEvent.position.point.y = pos.y();
+    msg.injectTouchEvent.pressure = 1.f;
+    msg.injectTouchEvent.buttons = convert_mouse_buttons(event->buttons());
+    msg.injectTouchEvent.actionButton = (enum android_motionevent_buttons)0;
 
 
     if (!pushMsg(&msg)) {
@@ -289,13 +289,13 @@ void ControllerThread::mouseWhellEvent(const QWheelEvent *event, const QSize &fr
 
     struct ControlMsg msg;
     msg.type = CONTROL_MSG_TYPE_INJECT_SCROLL_EVENT;
-    msg.inject_scroll_event.position.point.x = pos.x();
-    msg.inject_scroll_event.position.point.y = pos.y();
-    msg.inject_scroll_event.position.screen_size.width = (uint16_t)frameSize.width();
-    msg.inject_scroll_event.position.screen_size.height = (uint16_t)frameSize.height();
-    msg.inject_scroll_event.hscroll = hscroll;
-    msg.inject_scroll_event.vscroll = vscroll;
-    msg.inject_scroll_event.buttons = convert_mouse_buttons(event->buttons());
+    msg.injectScrollEvent.position.point.x = pos.x();
+    msg.injectScrollEvent.position.point.y = pos.y();
+    msg.injectScrollEvent.position.screenSize.width = (uint16_t)frameSize.width();
+    msg.injectScrollEvent.position.screenSize.height = (uint16_t)frameSize.height();
+    msg.injectScrollEvent.hscroll = hscroll;
+    msg.injectScrollEvent.vscroll = vscroll;
+    msg.injectScrollEvent.buttons = convert_mouse_buttons(event->buttons());
 
     if (!pushMsg(&msg)) {
         qDebug("Could not request 'inject mouse scroll event'");
@@ -324,12 +324,12 @@ void ControllerThread::sendKeycode(enum android_keycode keycode,
     // send DOWN event
     struct ControlMsg msg;
     msg.type = CONTROL_MSG_TYPE_INJECT_KEYCODE;
-    msg.inject_keycode.action = action == MdcAction::DOWN
+    msg.injectKeycode.action = action == MdcAction::DOWN
                                     ? AKEY_EVENT_ACTION_DOWN
                                     : AKEY_EVENT_ACTION_UP;
-    msg.inject_keycode.keycode = keycode;
-    msg.inject_keycode.metastate = AMETA_NONE;
-    msg.inject_keycode.repeat = 0;
+    msg.injectKeycode.keycode = keycode;
+    msg.injectKeycode.metastate = AMETA_NONE;
+    msg.injectKeycode.repeat = 0;
 
     if (!pushMsg(&msg)) {
         qDebug("Could not request 'inject %s'", name);
@@ -387,7 +387,7 @@ void Receiver::processMsg(struct DeviceMsg *msg)
     }
     case DEVICE_MSG_TYPE_ACK_CLIPBOARD:
         //assert(receiver->acksync);
-        qDebug("Ack device clipboard sequence=%I64u",msg->ack_clipboard.sequence);
+        qDebug("Ack device clipboard sequence=%I64u",msg->ackClipboard.sequence);
         //sc_acksync_ack(receiver->acksync, msg->ack_clipboard.sequence);
         break;
     }

@@ -59,30 +59,7 @@ bool AdbProcess::startServer()
     args << "start-server";
     return execute(args);
 }
-bool AdbProcess::install(const std::string &serial, const std::string &apkPath)
-{
-    if(serial.empty())
-        return false;
-    QStringList args;
-    args<<"-s";
-    args<<serial.c_str();
-    args<<"install";
-    args<<apkPath.c_str();
-    return execute(args);
-}
 
-bool AdbProcess::pushFile(const std::string &serial, const std::string &filePath,const std::string &devicePath)
-{
-    if(serial.empty())
-        return false;
-    QStringList args;
-    args<<"-s";
-    args<<serial.c_str();
-    args<<"push";
-    args<<filePath.c_str();
-    args<<devicePath.c_str();
-    return execute(args);
-}
 bool AdbProcess::push(const std::string &serial)
 {
     if(serial.empty())
@@ -92,7 +69,7 @@ bool AdbProcess::push(const std::string &serial)
     args<<serial.c_str();
     args<<"push";
     args<<LOCAL_SERVER_PATH;
-    args<<DEVICE_SERVER_PATH;
+    args<<TOMOBILE_SERVER_PATH;
 
     return execute(args);
 }
@@ -102,7 +79,7 @@ bool AdbProcess::executeDeviceService(const struct DeviceParams &params)
     args << "-s";
     args << params.serial.c_str();
     args << "shell";
-    args << QString("CLASSPATH=%1").arg(DEVICE_SERVER_PATH);
+    args << QString("CLASSPATH=%1").arg(TOMOBILE_SERVER_PATH);
     args << "app_process";
 
 #ifdef SERVER_DEBUGGER
@@ -121,7 +98,7 @@ bool AdbProcess::executeDeviceService(const struct DeviceParams &params)
 
     args << "/";
     args << "com.genymobile.scrcpy.Server";
-    args << DEVICE_SERVER_VERSION;
+    args << TOMOBILE_SERVER_VERSION;
     args << QString("scid=%1").arg(QString::asprintf("%08x",params.id));
 
     if (!params.video) {
